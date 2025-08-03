@@ -1,22 +1,20 @@
 import React, {useEffect} from 'react';
 
-import {type Car, carsService} from '../features/cars/api';
+import {useAppDispatch, useAppSelector} from '../shared/store';
+import {carsSelectors, getCarsThunk} from '../shared/store/cars';
 
 export const App = () => {
-  const [cars, setCars] = React.useState<Car[]>([]);
-  useEffect(() => {
-    const getCars = async () => {
-      const res = await carsService.getCars();
-      setCars(res);
-    };
+  const cars = useAppSelector(carsSelectors.selectCars);
+  const dispatch = useAppDispatch();
 
-    getCars();
+  useEffect(() => {
+    dispatch(getCarsThunk());
   }, []);
 
   return (
     <div>
       {cars.map((car) => (
-        <div>{car.name}</div>
+        <div key={car.id}>{car.name}</div>
       ))}
     </div>
   );
