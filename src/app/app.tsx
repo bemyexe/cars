@@ -5,12 +5,13 @@ import {carsSelectors, getCarsThunk} from '../shared/store/cars';
 
 export const App = () => {
   const cars = useAppSelector(carsSelectors.selectCars);
+  const error = useAppSelector(carsSelectors.selectCarsError);
   const dispatch = useAppDispatch();
 
   useEffect(() => {
     dispatch(getCarsThunk());
   }, []);
-
+  console.log(error);
   return (
     <div>
       {cars.map((car) => (

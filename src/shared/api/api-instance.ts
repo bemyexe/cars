@@ -1,4 +1,4 @@
-class ApiInstanceError extends Error {
+export class ApiInstanceError extends Error {
   constructor(response: Response) {
     super('ApiInstanceError:' + response.status);
   }
