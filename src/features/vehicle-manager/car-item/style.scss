@@ -11,10 +11,18 @@
 
   &-field {
     display: flex;
+    align-items: center;
     gap: 5px;
 
     &-title {
       font-weight: bold;
+    }
+
+    &-edit-mode {
+      display: flex;
+      align-items: center;
+
+      gap: 8px;
     }
   }
 }

@@ -20,7 +20,7 @@ export const VehicleManager = ({className}: Props) => {
   useEffect(() => {
     dispatch(getCarsThunk());
   }, [dispatch]);
-
+  console.log(cars);
   return (
     <div className={clsx('vehicle-manager', className)}>
       <CarsList cars={cars} />

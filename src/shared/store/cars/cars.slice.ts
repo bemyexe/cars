@@ -1,6 +1,6 @@
-import {createSlice} from '@reduxjs/toolkit';
+import {createSlice, type PayloadAction} from '@reduxjs/toolkit';
 
-import type {Car} from '../../../features/cars/api';
+import type {Car} from '../../../features/vehicle-manager/api';
 
 import {getCarsThunk} from './cars.thunk';
 
@@ -21,7 +21,16 @@ const initialState: CarsState = {
 const carsSlice = createSlice({
   name,
   initialState,
-  reducers: {},
+  reducers: {
+    updateCar: (state, {payload}: PayloadAction<Car>) => {
+      state.cars = state.cars.map((car) =>
+        car.id === payload.id ? {...car, ...payload} : car
+      );
+    },
+    removeCar: (state, {payload}: PayloadAction<Car['id']>) => {
+      state.cars = state.cars.filter((car) => car.id !== payload);
+    },
+  },
   extraReducers: (builder) => {
     builder
       .addCase(getCarsThunk.pending, (state) => {
@@ -38,5 +47,7 @@ const carsSlice = createSlice({
       });
   },
 });
+
+export const {updateCar, removeCar} = carsSlice.actions;
 
 export const carsReducer = carsSlice.reducer;
