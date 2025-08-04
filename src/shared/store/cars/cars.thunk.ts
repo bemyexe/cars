@@ -1,4 +1,4 @@
-import {carsService} from '../../../features/cars/api';
+import {carsService} from '../../../features/vehicle-manager/api';
 import {ApiInstanceError} from '../../api/api-instance';
 import {createAppAsyncThunk} from '../../helpers';
 

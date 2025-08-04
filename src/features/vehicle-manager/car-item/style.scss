@@ -1,0 +1,20 @@
+.car {
+  display: flex;
+  flex-direction: column;
+
+  gap: 6px;
+
+  padding: 6px;
+
+  border: 1px solid black;
+  border-radius: 8px;
+
+  &-field {
+    display: flex;
+    gap: 5px;
+
+    &-title {
+      font-weight: bold;
+    }
+  }
+}
