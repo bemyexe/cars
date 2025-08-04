@@ -1,13 +1,15 @@
-import {type ChangeEvent, useState} from 'react';
+import React from 'react';
 import clsx from 'clsx';
 import {Check, PencilLine, X} from 'lucide-react';
 
 import {useAppDispatch} from '../../../shared/store';
 import {removeCar, updateCar} from '../../../shared/store/cars/cars.slice';
-import {Button} from '../../../shared/ui';
+import {Button, Input} from '../../../shared/ui';
 import type {Car} from '../api';
 
 import './style.scss';
+
+type EditableFields = keyof Pick<Car, 'name' | 'price'>;
 
 interface Props {
   car: Car;
@@ -20,42 +22,56 @@ const EDITABLE_FIELDS = {
 } as const;
 
 export const CarItem = ({car, className}: Props) => {
-  const [isEditButtonClicked, setIsEditButtonClicked] = useState(false);
-  const [clickedFieldToEdit, setClickedFieldToEdit] = useState('');
-  const [inputName, setInputName] = useState(car.name);
-  const [inputPrice, setInputrPrice] = useState(String(car.price));
+  const [isEditModeActivated, setIsEditModeActivated] = React.useState(false);
+  const [selectedFieldToEdit, setSelectedFieldToEdit] = React.useState<
+    EditableFields | ''
+  >('');
+
+  let initialValues: Pick<Car, 'name' | 'price'> = {
+    name: car.name,
+    price: car.price,
+  };
+
+  const [inputValues, setInputValues] = React.useState<
+    Pick<Car, 'name' | 'price'>
+  >({
+    name: car.name,
+    price: car.price,
+  });
+
   const dispatch = useAppDispatch();
-  const handleEditButtonClick = (
-    carId: Car['id'],
-    fieldToEdit: keyof Pick<Car, 'name' | 'price'>
+
+  const handleChangeInputValue = (
+    event: React.ChangeEvent<HTMLInputElement>
   ) => {
-    setIsEditButtonClicked(true);
-    setClickedFieldToEdit(fieldToEdit);
-    console.log(carId, fieldToEdit);
+    setInputValues((prev) => ({
+      ...prev,
+      [event.target.name]:
+        event.target.type === 'number'
+          ? Number(event.target.value)
+          : event.target.value,
+    }));
   };
-
-  const handleChangeInputName = (event: ChangeEvent<HTMLInputElement>) => {
-    setInputName(event.target.value);
-  };
-
-  const handleChangeInputPrice = (event: ChangeEvent<HTMLInputElement>) => {
-    setInputrPrice(event.target.value);
+  const handleActiveEditMode = (fieldToEdit: EditableFields) => {
+    setIsEditModeActivated(true);
+    setSelectedFieldToEdit(fieldToEdit);
   };
 
   const handleCloseEditMode = () => {
-    setIsEditButtonClicked(false);
-    setClickedFieldToEdit('');
+    setInputValues((prev) => ({...prev, ...initialValues}));
+    setIsEditModeActivated(false);
+    setSelectedFieldToEdit('');
   };
 
-  const handleSaveEdit = (
-    editedField: keyof Pick<Car, 'name' | 'price'>,
-    newValue: string
+  const handleSaveEditedField = (
+    editedField: EditableFields,
+    newValue: Car['name'] | Car['price']
   ) => {
     const editedCar = {
       ...car,
       [editedField]: newValue,
     };
-    console.log(editedCar);
+    initialValues = {...inputValues};
     dispatch(updateCar(editedCar));
     handleCloseEditMode();
   };
@@ -67,21 +83,29 @@ export const CarItem = ({car, className}: Props) => {
   return (
     <div className={clsx('car', className)}>
       <div className="car-field">
-        <span className="car-field-title">Name:</span>
-        {isEditButtonClicked && clickedFieldToEdit === EDITABLE_FIELDS.name ? (
-          <input
-            value={inputName}
-            onChange={(event) => handleChangeInputName(event)}
-          />
-        ) : (
-          <span>{car.name}</span>
-        )}
+        <div className="car-field-content">
+          <span className="car-field-content-title">Name:</span>
+          {isEditModeActivated &&
+          selectedFieldToEdit === EDITABLE_FIELDS.name ? (
+            <Input
+              autoFocus
+              type="text"
+              name="name"
+              value={inputValues.name}
+              onChange={(event) => handleChangeInputValue(event)}
+            />
+          ) : (
+            <span>{car.name}</span>
+          )}
+        </div>
 
-        {isEditButtonClicked && clickedFieldToEdit === EDITABLE_FIELDS.name ? (
+        {isEditModeActivated && selectedFieldToEdit === EDITABLE_FIELDS.name ? (
           <div className="car-field-edit-mode">
             <Button
               type="button"
-              onClick={() => handleSaveEdit(EDITABLE_FIELDS.name, inputName)}>
+              onClick={() =>
+                handleSaveEditedField(EDITABLE_FIELDS.name, inputValues.name)
+              }>
               <Check />
             </Button>
 
@@ -92,37 +116,48 @@ export const CarItem = ({car, className}: Props) => {
         ) : (
           <Button
             type="button"
-            onClick={() => handleEditButtonClick(car.id, EDITABLE_FIELDS.name)}>
+            onClick={() => handleActiveEditMode(EDITABLE_FIELDS.name)}>
             <PencilLine />
           </Button>
         )}
       </div>
       <div className="car-field">
-        <span className="car-field-title">Model:</span>
-        <span>{car.model}</span>
+        <div className="car-field-content">
+          <span className="car-field-content-title">Model:</span>
+          <span>{car.model}</span>
+        </div>
       </div>
       <div className="car-field">
-        <span className="car-field-title">Year:</span>
-        <span>{car.year}</span>
+        <div className="car-field-content">
+          <span className="car-field-content-title">Year:</span>
+          <span>{car.year}</span>
+        </div>
       </div>
       <div className="car-field">
-        <span className="car-field-title">Price:</span>
+        <div className="car-field-content">
+          <span className="car-field-content-title">Price:</span>
+          {isEditModeActivated &&
+          selectedFieldToEdit === EDITABLE_FIELDS.price ? (
+            <Input
+              autoFocus
+              name="price"
+              type="number"
+              value={inputValues.price}
+              onChange={(event) => handleChangeInputValue(event)}
+            />
+          ) : (
+            <span>{car.price}</span>
+          )}
+        </div>
 
-        {isEditButtonClicked && clickedFieldToEdit === EDITABLE_FIELDS.price ? (
-          <input
-            type="number"
-            value={inputPrice}
-            onChange={(event) => handleChangeInputPrice(event)}
-          />
-        ) : (
-          <span>{car.price}</span>
-        )}
-
-        {isEditButtonClicked && clickedFieldToEdit === EDITABLE_FIELDS.price ? (
+        {isEditModeActivated &&
+        selectedFieldToEdit === EDITABLE_FIELDS.price ? (
           <div className="car-field-edit-mode">
             <Button
               type="button"
-              onClick={() => handleSaveEdit(EDITABLE_FIELDS.price, inputPrice)}>
+              onClick={() =>
+                handleSaveEditedField(EDITABLE_FIELDS.price, inputValues.price)
+              }>
               <Check />
             </Button>
             <Button type="button" onClick={handleCloseEditMode}>
@@ -132,9 +167,7 @@ export const CarItem = ({car, className}: Props) => {
         ) : (
           <Button
             type="button"
-            onClick={() =>
-              handleEditButtonClick(car.id, EDITABLE_FIELDS.price)
-            }>
+            onClick={() => handleActiveEditMode(EDITABLE_FIELDS.price)}>
             <PencilLine />
           </Button>
         )}

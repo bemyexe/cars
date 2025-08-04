@@ -1,8 +1,10 @@
 import {VehicleManager} from '../features/vehicle-manager';
 
+import './app.scss';
+
 export const App = () => {
   return (
-    <div>
+    <div className="app">
       <VehicleManager />
     </div>
   );
