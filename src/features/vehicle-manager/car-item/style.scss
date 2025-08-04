@@ -20,11 +20,12 @@
         font-weight: bold;
       }
     }
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-
-    gap: 5px;
+    & {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 5px;
+    }
 
     &-edit-mode {
       display: flex;
