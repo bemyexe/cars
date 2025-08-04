@@ -15,12 +15,17 @@ interface Props {
 
 export const VehicleManager = ({className}: Props) => {
   const cars = useAppSelector(carsSelectors.selectCars);
+  const loading = useAppSelector(carsSelectors.selectCarsLoading);
   const error = useAppSelector(carsSelectors.selectCarsError);
   const dispatch = useAppDispatch();
 
   useEffect(() => {
     dispatch(getCarsThunk());
   }, [dispatch]);
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <div className={clsx('vehicle-manager', className)}>
