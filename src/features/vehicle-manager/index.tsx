@@ -4,6 +4,7 @@ import clsx from 'clsx';
 import {useAppDispatch, useAppSelector} from '../../shared/store';
 import {carsSelectors, getCarsThunk} from '../../shared/store/cars';
 
+import {CarsFilters} from './cars-filters';
 import {CarsList} from './cars-list';
 
 import './style.scss';
@@ -20,9 +21,10 @@ export const VehicleManager = ({className}: Props) => {
   useEffect(() => {
     dispatch(getCarsThunk());
   }, [dispatch]);
-  console.log(cars);
+
   return (
     <div className={clsx('vehicle-manager', className)}>
+      <CarsFilters />
       <CarsList cars={cars} />
       {error && <div>{error}</div>}
     </div>
