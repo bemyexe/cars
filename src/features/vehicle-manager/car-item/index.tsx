@@ -1,15 +1,17 @@
 import React from 'react';
 import clsx from 'clsx';
-import {Check, PencilLine, X} from 'lucide-react';
+import {PencilLine} from 'lucide-react';
 
 import {useAppDispatch} from '../../../shared/store';
 import {removeCar, updateCar} from '../../../shared/store/cars/cars.slice';
 import {Button, Input} from '../../../shared/ui';
 import type {Car} from '../api';
 
+import {EditModeActionButtons} from './edit-mode-action-buttons';
+
 import './style.scss';
 
-type EditableFields = keyof Pick<Car, 'name' | 'price'>;
+export type EditableFields = keyof Pick<Car, 'name' | 'price'>;
 
 interface Props {
   car: Car;
@@ -101,17 +103,12 @@ export const CarItem = ({car, className}: Props) => {
 
         {isEditModeActivated && selectedFieldToEdit === EDITABLE_FIELDS.name ? (
           <div className="car-field-edit-mode">
-            <Button
-              type="button"
-              onClick={() =>
+            <EditModeActionButtons
+              saveAction={() =>
                 handleSaveEditedField(EDITABLE_FIELDS.name, inputValues.name)
-              }>
-              <Check />
-            </Button>
-
-            <Button type="button" onClick={handleCloseEditMode}>
-              <X />
-            </Button>
+              }
+              closeAction={handleCloseEditMode}
+            />
           </div>
         ) : (
           <Button
@@ -153,16 +150,12 @@ export const CarItem = ({car, className}: Props) => {
         {isEditModeActivated &&
         selectedFieldToEdit === EDITABLE_FIELDS.price ? (
           <div className="car-field-edit-mode">
-            <Button
-              type="button"
-              onClick={() =>
+            <EditModeActionButtons
+              saveAction={() =>
                 handleSaveEditedField(EDITABLE_FIELDS.price, inputValues.price)
-              }>
-              <Check />
-            </Button>
-            <Button type="button" onClick={handleCloseEditMode}>
-              <X />
-            </Button>
+              }
+              closeAction={handleCloseEditMode}
+            />
           </div>
         ) : (
           <Button
