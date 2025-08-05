@@ -10,15 +10,19 @@ interface Props {
   className?: string;
 }
 
+const CarListItem = ({carItem}: {carItem: Car}) => {
+  return (
+    <li>
+      <CarItem car={carItem} />
+    </li>
+  );
+};
+
 export const CarsList = ({cars, className}: Props) => {
   return (
     <ul className={clsx('cars-list', className)}>
       {cars.map((car) => {
-        return (
-          <li key={car.id}>
-            <CarItem car={car} />
-          </li>
-        );
+        return <CarListItem key={car.id} carItem={car} />;
       })}
     </ul>
   );
