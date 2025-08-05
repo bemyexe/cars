@@ -11,7 +11,7 @@ import {EditModeActionButtons} from './edit-mode-action-buttons';
 
 import './style.scss';
 
-export type EditableFields = keyof Pick<Car, 'name' | 'price'>;
+type EditableFields = keyof Pick<Car, 'name' | 'price'>;
 
 interface Props {
   car: Car;
