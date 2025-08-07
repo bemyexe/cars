@@ -1,12 +1,11 @@
-import {carsService} from '../../../features/vehicle-manager/api';
 import {ApiInstanceError} from '../../api/api-instance';
 import {createAppAsyncThunk} from '../../helpers';
 
 export const getCarsThunk = createAppAsyncThunk(
   'cars/getCars',
-  async (_, {rejectWithValue}) => {
+  async (_, {rejectWithValue, extra}) => {
     try {
-      const response = await carsService.getCars();
+      const response = await extra.carsService.getCars();
       return response;
     } catch (err) {
       const error = err as ApiInstanceError;
