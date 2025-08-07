@@ -13,7 +13,7 @@ interface Props {
   className?: string;
 }
 
-export const VehicleManager = ({className}: Props) => {
+const VehicleManager = ({className}: Props) => {
   const cars = useAppSelector(carsSelectors.selectCars);
   const loading = useAppSelector(carsSelectors.selectCarsLoading);
   const error = useAppSelector(carsSelectors.selectCarsError);
@@ -35,3 +35,5 @@ export const VehicleManager = ({className}: Props) => {
     </div>
   );
 };
+
+export default VehicleManager;

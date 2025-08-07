@@ -10,7 +10,7 @@ import './map.scss';
 
 maptilersdk.config.apiKey = import.meta.env.VITE_MAPTILER_API_KEY;
 
-export const Map = () => {
+const Map = () => {
   const mapContainer = React.useRef<HTMLDivElement>(null);
   const map = React.useRef<maptilersdk.Map | null>(null);
   const loading = useAppSelector(carsSelectors.selectCarsLoading);
@@ -72,3 +72,5 @@ export const Map = () => {
     </div>
   );
 };
+
+export default Map;
